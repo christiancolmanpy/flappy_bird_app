@@ -1,3 +1,29 @@
-import 'package:flame/game.dart';
+import 'dart:async';
 
-class FlappyBirdGame extends FlameGame {}
+import 'package:flame/components.dart';
+import 'package:flame/game.dart';
+import 'package:flappy_bird_app/components/background.dart';
+import 'package:flappy_bird_app/components/bird.dart';
+import 'package:flappy_bird_app/components/ground.dart';
+import 'package:flappy_bird_app/components/pipe_group.dart';
+import 'package:flappy_bird_app/game/configuration.dart';
+
+class FlappyBirdGame extends FlameGame {
+  late Bird bird;
+  Timer interval = Timer(Config.pipeInterval, repeat: true);
+  @override
+  Future<void> onLoad() async {
+    addAll([
+      Background(),
+      Ground(),
+      bird = Bird(),
+    ]);
+    interval.onTick = () => add(PipeGroup());
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    interval.update(dt);
+  }
+}
